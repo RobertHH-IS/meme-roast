@@ -1,0 +1,112 @@
+[
+  {
+    "id": "db",
+    "name": "Distracted Boyfriend",
+    "slots": 3,
+    "scene": "A man walking with his girlfriend turns to ogle another woman passing by. Three labels: the original loyalty/girlfriend (slot 0), the new shiny distraction (slot 1), the man being tempted (slot 2).",
+    "when": "User is abandoning something sensible they have for a shinier new obsession. Pattern: existing thing → new shiny thing → the user/themself.",
+    "example": {
+      "user_said": "I'm rewriting our working Node auth in Rust because I'm bored.",
+      "captions": ["working Node auth", "Rust", "me"]
+    }
+  },
+  {
+    "id": "drake",
+    "name": "Drake Hotline Bling",
+    "slots": 2,
+    "scene": "Two stacked panels of Drake. Top: recoiling with hand up — rejection. Bottom: smiling and pointing — approval.",
+    "when": "Comparing two options where one is rejected and one is preferred. Slot 0 (top) = rejected option, slot 1 (bottom) = chosen option.",
+    "example": {
+      "user_said": "I read the docs once then immediately started guessing.",
+      "captions": ["RTFM", "vibes-based coding"]
+    }
+  },
+  {
+    "id": "fine",
+    "name": "This Is Fine",
+    "slots": 2,
+    "scene": "A cartoon dog sitting in a burning room sipping coffee. Slot 0 (top) sets up the disaster, slot 1 (bottom) is usually 'this is fine' or a variant of the user's denial.",
+    "when": "User describes an obvious disaster but talks about it like it's normal. The contrast IS the joke.",
+    "example": {
+      "user_said": "Prod crashes every hour but nobody is paged so we're good.",
+      "captions": ["prod down hourly, no alerts", "this is fine"]
+    }
+  },
+  {
+    "id": "buzz",
+    "name": "X, X Everywhere",
+    "slots": 2,
+    "scene": "Buzz Lightyear gestures broadly while telling Woody '[X], [X] everywhere'. Slot 0 is the noun alone, slot 1 is '[noun] everywhere'.",
+    "when": "User keeps repeating the same theme/topic — call it out by saying it's everywhere.",
+    "example": {
+      "user_said": "Everyone at this conference will not shut up about agents.",
+      "captions": ["Agents", "agents everywhere"]
+    }
+  },
+  {
+    "id": "afraid",
+    "name": "Afraid to Ask Andy",
+    "slots": 2,
+    "scene": "Andy from Parks & Rec, hands on cheeks, nervous. Slot 0 = an awkward admission of long-running ignorance, slot 1 = the absurd lengths to avoid asking.",
+    "when": "User pretends to know a term/concept they have actually been faking for ages. Self-deprecating energy.",
+    "example": {
+      "user_said": "I've used Kubernetes for years, totally know what a sidecar is.",
+      "captions": ["used k8s for 3 years", "still no idea what a sidecar is"]
+    }
+  },
+  {
+    "id": "success",
+    "name": "Success Kid",
+    "slots": 2,
+    "scene": "A baby with a clenched fist of victory in front of a beach. Tiny, petty wins celebrated like championships.",
+    "when": "User celebrates a trivial accomplishment with disproportionate enthusiasm. Slot 0 = setup, slot 1 = the petty victory.",
+    "example": {
+      "user_said": "I remembered to put pants on before joining standup today.",
+      "captions": ["joined standup", "pants on first try"]
+    }
+  },
+  {
+    "id": "iw",
+    "name": "Insanity Wolf",
+    "slots": 2,
+    "scene": "Black-and-white snarling wolf in front of moon. Slot 0 = a normal-ish setup line, slot 1 = an unhinged escalation.",
+    "when": "Take something the user said is mildly off and escalate it to a deranged extreme.",
+    "example": {
+      "user_said": "I sometimes skip the unit tests when I'm in a hurry.",
+      "captions": ["skip unit tests", "delete the test files"]
+    }
+  },
+  {
+    "id": "ds",
+    "name": "Daily Struggle / Two Buttons",
+    "slots": 2,
+    "scene": "A sweating man in a red shirt stares at two red buttons, panicking. Each caption labels one button — usually two options that are basically the same or both bad.",
+    "when": "User agonizes over a false choice between two options that do not actually differ.",
+    "example": {
+      "user_said": "Should I quit or just keep complaining on Twitter forever?",
+      "captions": ["fix the job", "tweet about it"]
+    }
+  },
+  {
+    "id": "ackbar",
+    "name": "It's a Trap",
+    "slots": 1,
+    "scene": "Admiral Ackbar mid-yell. Single caption: a restatement of an obvious trap as a warning.",
+    "when": "User describes a transparent trap with zero awareness. Restate the trap so it sounds like the warning the user should have heard.",
+    "example": {
+      "user_said": "My boss said it'd be a quick 30-minute call to discuss feedback.",
+      "captions": ["quick 30-min call about your performance"]
+    }
+  },
+  {
+    "id": "philosoraptor",
+    "name": "Philosoraptor",
+    "slots": 2,
+    "scene": "A velociraptor in The Thinker pose. Two-panel fake-deep question. Slot 0 = pseudo-philosophical setup, slot 1 = ironic punchline that reveals the question is silly.",
+    "when": "User asks a fake-deep or oddly profound-sounding question about something mundane.",
+    "example": {
+      "user_said": "If I name my variable better, does that make me a better person?",
+      "captions": ["if I name the variable better", "do I become a better person"]
+    }
+  }
+]

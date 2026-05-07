@@ -1,0 +1,37 @@
+{
+  "name": "meme-roast",
+  "version": "0.1.0",
+  "description": "Voice-driven roast meme overlay. Listens via OpenAI Realtime, fires memes from memegen.link.",
+  "private": true,
+  "type": "module",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "start": "electron-vite preview",
+    "seed:catalog": "tsx scripts/seed-catalog.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "zustand": "^5.0.13"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^42.0.0",
+    "electron-vite": "^5.0.0",
+    "tailwindcss": "^4.2.4",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7"
+  }
+}
