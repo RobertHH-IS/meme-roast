@@ -5,9 +5,17 @@ import { MemeFeed } from './components/MemeFeed'
 import { startRealtime, type RealtimeClient } from './realtime/client'
 import { useStore } from './store'
 
-const COOLDOWN_AFTER_MEME_MS = 5_000
+const COOLDOWN_AFTER_MEME_MS = 9_000
 const COOLDOWN_AFTER_SCAN_MS = 1_200
 const IMPACT_MS = 620
+
+function getAvoidTemplateIds(): string[] {
+  const { memes, cooldownTemplates } = useStore.getState()
+  const ids = new Set(cooldownTemplates)
+  const latestTemplateId = memes[0]?.templateId
+  if (latestTemplateId) ids.add(latestTemplateId)
+  return [...ids]
+}
 
 export default function App() {
   const [running, setRunning] = useState(false)
@@ -42,13 +50,13 @@ export default function App() {
         onCommit: () => {
           const c = clientRef.current
           if (!c) return
-          const { muted, cooldownTemplates } = useStore.getState()
+          const { muted } = useStore.getState()
           if (muted) return
           const now = Date.now()
           if (now - lastMemeAtRef.current < COOLDOWN_AFTER_MEME_MS) return
           if (now - lastScanAtRef.current < COOLDOWN_AFTER_SCAN_MS) return
           lastScanAtRef.current = now
-          c.triggerScan([...cooldownTemplates])
+          c.triggerScan(getAvoidTemplateIds())
         },
         onLog: (msg) => console.log('[realtime]', msg)
       })
@@ -68,7 +76,7 @@ export default function App() {
 
   useEffect(() => {
     const off = window.api.onHotkey((event) => {
-      const { killLast: kill, toggleMute: mute, cooldownTemplates } = useStore.getState()
+      const { killLast: kill, toggleMute: mute } = useStore.getState()
       switch (event) {
         case 'kill-last':
           kill()
@@ -77,7 +85,7 @@ export default function App() {
           mute()
           break
         case 'force-meme':
-          clientRef.current?.forceMeme([...cooldownTemplates])
+          clientRef.current?.forceMeme(getAvoidTemplateIds())
           break
       }
     })

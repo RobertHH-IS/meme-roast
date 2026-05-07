@@ -30,7 +30,7 @@ A frameless transparent window pins to the top-right of your primary display. Cl
 
 ## Curating the meme catalog
 
-The starter catalog ships with 10 templates (`src/renderer/src/memes/catalog.json`). To expand:
+The starter catalog ships with 35 templates (`src/renderer/src/memes/catalog.json`). To expand:
 
 ```bash
 npm run seed:catalog

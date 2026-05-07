@@ -19,15 +19,17 @@ export function MemeStage() {
   return (
     <div
       key={latest.id}
-      className="meme-slam flex-1 flex flex-col items-center justify-center px-4 py-3"
+      className="meme-slam flex-1 min-h-0 flex flex-col items-center justify-center px-4 py-3"
     >
-      <img
-        src={latest.url}
-        alt={latest.templateName}
-        className="max-w-full max-h-[260px] rounded-lg shadow-xl shadow-black/40 ring-1 ring-white/10"
-        draggable={false}
-      />
-      <div className="mt-2 text-[11px] text-zinc-400 text-center">
+      <div className="flex-1 min-h-0 w-full flex items-center justify-center">
+        <img
+          src={latest.url}
+          alt={latest.templateName}
+          className="max-w-full max-h-full object-contain rounded-lg shadow-xl shadow-black/40 ring-1 ring-white/10"
+          draggable={false}
+        />
+      </div>
+      <div className="mt-2 shrink-0 text-[11px] text-zinc-400 text-center">
         {latest.templateName}
       </div>
     </div>

@@ -4,7 +4,8 @@ import {
   GENERATE_MEME_TOOL,
   HEARTBEAT_INSTRUCTIONS,
   TOOLS,
-  buildSystemPrompt
+  buildSystemPrompt,
+  type ScanBoundary
 } from './prompt'
 
 const REALTIME_BASE = 'https://api.openai.com/v1/realtime/calls'
@@ -66,6 +67,14 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
   const callMeta = new Map<string, { name: string; callId?: string }>()
   const cancelledResponses = new Set<string>()
   const textBuffers = new Map<string, string>()
+  const activeResponses = new Set<string>()
+  let awaitingResponseCreate = false
+  let targetSegment = 1
+  let lastMemeSummary: string | undefined
+
+  function getScanBoundary(): ScanBoundary {
+    return { segment: targetSegment, lastMemeSummary }
+  }
 
   dc.addEventListener('open', () => {
     log('datachannel open')
@@ -73,7 +82,7 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
       type: 'session.update',
       session: {
         type: 'realtime',
-        instructions: buildSystemPrompt([]),
+        instructions: buildSystemPrompt([], getScanBoundary()),
         output_modalities: ['text'],
         tools: TOOLS,
         tool_choice: 'required',
@@ -120,7 +129,12 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
         callbacks.onCommit?.()
         break
       case 'response.created':
-        log('  response created: ' + ((event.response as { id?: string })?.id ?? '?'))
+        awaitingResponseCreate = false
+        {
+          const responseId = (event.response as { id?: string })?.id
+          if (responseId) activeResponses.add(responseId)
+          log('  response created: ' + (responseId ?? '?'))
+        }
         break
       case 'response.output_item.added': {
         const item = event.item as {
@@ -181,18 +195,21 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
                 captions: parsed.captions,
                 url: buildMemeUrl(parsed.template_id, parsed.captions)
               })
+              lastMemeSummary =
+                tpl.id +
+                ' / ' +
+                JSON.stringify(parsed.captions) +
+                ' / ' +
+                (parsed.reasoning ?? 'no reasoning')
+              targetSegment += 1
+              log('  recency boundary advanced to segment ' + targetSegment)
             }
           } else {
             log('unexpected tool: ' + toolName)
           }
-          sendEvent(dc, {
-            type: 'conversation.item.create',
-            item: {
-              type: 'function_call_output',
-              call_id: callId,
-              output: JSON.stringify({ ok: true })
-            }
-          })
+          // Scans are intentionally created with conversation: 'none'. The tool call
+          // is the app-side result, so there is no conversation item to answer with
+          // function_call_output.
         } catch (err) {
           log('failed to parse tool args (' + toolName + '): ' + String(err))
         }
@@ -200,7 +217,8 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
       }
       case 'response.done': {
         // Clean up any orphaned buffers tied to this response.
-        const response = event.response as { output?: Array<{ id?: string }> } | undefined
+        const response = event.response as { id?: string; output?: Array<{ id?: string }> } | undefined
+        if (response?.id) activeResponses.delete(response.id)
         for (const item of response?.output ?? []) {
           if (item.id) {
             argBuffers.delete(item.id)
@@ -236,6 +254,8 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
           log('cancel race (ignore): ' + msg)
           break
         }
+        awaitingResponseCreate = false
+        activeResponses.clear()
         log('server error: ' + msg)
         callbacks.onStateChange('error', msg)
         break
@@ -296,14 +316,19 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
         log('scan skipped: dc not open (' + dc.readyState + ')')
         return
       }
+      if (awaitingResponseCreate || activeResponses.size > 0) {
+        log('scan skipped: response already in flight')
+        return
+      }
       log('🔎 scan (cooldowns: ' + (cooldownIds.length || 'none') + ')')
       sendEvent(dc, {
         type: 'session.update',
         session: {
           type: 'realtime',
-          instructions: buildSystemPrompt(cooldownIds)
+          instructions: buildSystemPrompt(cooldownIds, getScanBoundary())
         }
       })
+      awaitingResponseCreate = true
       sendEvent(dc, {
         type: 'response.create',
         response: {
@@ -320,14 +345,19 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
         log('forceMeme skipped: dc not open')
         return
       }
+      if (awaitingResponseCreate || activeResponses.size > 0) {
+        log('forceMeme skipped: response already in flight')
+        return
+      }
       log('⚡ force-meme firing')
       sendEvent(dc, {
         type: 'session.update',
         session: {
           type: 'realtime',
-          instructions: buildSystemPrompt(cooldownIds)
+          instructions: buildSystemPrompt(cooldownIds, getScanBoundary())
         }
       })
+      awaitingResponseCreate = true
       sendEvent(dc, {
         type: 'response.create',
         response: {

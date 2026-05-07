@@ -22,6 +22,10 @@ export function StatusBar({ onStart, onStop, running, micStream }: Props) {
     void window.api.setExpanded(next)
   }
 
+  const onClose = (): void => {
+    void window.api.closeWindow()
+  }
+
   const dotClass =
     connection === 'connected'
       ? muted
@@ -59,13 +63,6 @@ export function StatusBar({ onStart, onStop, running, micStream }: Props) {
       </div>
       <div className="flex items-center gap-2 no-drag">
         {running && <MicMeter stream={micStream} />}
-        <button
-          onClick={onToggleExpand}
-          title={expanded ? 'compact view' : 'expand for show-off'}
-          className="text-xs px-2 py-1 rounded bg-white/5 hover:bg-white/10 transition"
-        >
-          {expanded ? '⤡' : '⤢'}
-        </button>
         {running ? (
           <>
             <button
@@ -89,6 +86,21 @@ export function StatusBar({ onStart, onStop, running, micStream }: Props) {
             start listening
           </button>
         )}
+        <button
+          onClick={onToggleExpand}
+          title={expanded ? 'compact view' : 'expand for show-off'}
+          className="text-xs px-2 py-1 rounded bg-white/5 hover:bg-white/10 transition"
+        >
+          {expanded ? '⤡' : '⤢'}
+        </button>
+        <button
+          onClick={onClose}
+          title="close window"
+          aria-label="close window"
+          className="text-xs px-2 py-1 rounded bg-white/5 hover:bg-rose-500/30 text-zinc-300 hover:text-rose-100 transition"
+        >
+          X
+        </button>
       </div>
     </div>
   )
