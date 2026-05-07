@@ -11,19 +11,20 @@ loadEnv({ path: join(__dirname, '../../.env') })
 let mainWindow: BrowserWindow | null = null
 
 const COMPACT = { width: 420, height: 720 }
-const EXPANDED = { width: 1280, height: 820 }
 const MARGIN = 24
 
 function placeWindow(win: BrowserWindow, expanded: boolean): void {
   const { workArea } = screen.getPrimaryDisplay()
-  const { width, height } = expanded ? EXPANDED : COMPACT
-  const x = expanded
-    ? workArea.x + Math.floor((workArea.width - width) / 2)
-    : workArea.x + workArea.width - width - MARGIN
-  const y = expanded
-    ? workArea.y + Math.floor((workArea.height - height) / 2)
-    : workArea.y + MARGIN
-  win.setBounds({ x, y, width, height }, true)
+  const bounds = expanded
+    ? workArea
+    : {
+        x: workArea.x + workArea.width - COMPACT.width - MARGIN,
+        y: workArea.y + MARGIN,
+        width: COMPACT.width,
+        height: COMPACT.height
+      }
+
+  win.setBounds(bounds, true)
 }
 
 function createWindow(): void {
