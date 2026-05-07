@@ -7,7 +7,6 @@ import { useStore } from './store'
 
 const COOLDOWN_AFTER_MEME_MS = 9_000
 const COOLDOWN_AFTER_SCAN_MS = 1_200
-const IMPACT_MS = 620
 
 function getAvoidTemplateIds(): string[] {
   const { memes, cooldownTemplates } = useStore.getState()
@@ -19,7 +18,6 @@ function getAvoidTemplateIds(): string[] {
 
 export default function App() {
   const [running, setRunning] = useState(false)
-  const [impact, setImpact] = useState(false)
   const [micStream, setMicStream] = useState<MediaStream | null>(null)
   const clientRef = useRef<RealtimeClient | null>(null)
   const lastMemeAtRef = useRef<number>(0)
@@ -28,7 +26,6 @@ export default function App() {
   const setConnection = useStore((s) => s.setConnection)
   const pushMeme = useStore((s) => s.pushMeme)
   const reset = useStore((s) => s.reset)
-  const latestMemeId = useStore((s) => s.memes[0]?.id)
 
   const start = async (): Promise<void> => {
     if (clientRef.current) return
@@ -99,22 +96,8 @@ export default function App() {
     }
   }, [])
 
-  useEffect(() => {
-    if (!latestMemeId) return
-    setImpact(true)
-    const t = window.setTimeout(() => setImpact(false), IMPACT_MS)
-    return () => window.clearTimeout(t)
-  }, [latestMemeId])
-
   return (
-    <div
-      className={[
-        'h-full w-full flex flex-col bg-zinc-900/85 backdrop-blur-md text-white rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-2xl shadow-black/60',
-        impact ? 'app-impact' : ''
-      ]
-        .join(' ')
-        .trim()}
-    >
+    <div className="h-full w-full flex flex-col bg-zinc-900/85 backdrop-blur-md text-white rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-2xl shadow-black/60">
       <StatusBar onStart={start} onStop={stop} running={running} micStream={micStream} />
       <MemeStage />
       <MemeFeed />
