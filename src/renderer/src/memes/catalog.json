@@ -3,7 +3,7 @@
     "id": "db",
     "name": "Distracted Boyfriend",
     "slots": 3,
-    "scene": "A man walking with his girlfriend turns to ogle another woman passing by. Three labels: the original loyalty/girlfriend (slot 0), the new shiny distraction (slot 1), the man being tempted (slot 2).",
+    "scene": "A man walking with his girlfriend turns to ogle another woman. Three labels: original loyalty (slot 0), new shiny distraction (slot 1), the man being tempted (slot 2).",
     "when": "User is abandoning something sensible they have for a shinier new obsession. Pattern: existing thing → new shiny thing → the user/themself.",
     "example": {
       "user_said": "I'm rewriting our working Node auth in Rust because I'm bored.",
@@ -12,10 +12,10 @@
   },
   {
     "id": "drake",
-    "name": "Drake Hotline Bling",
+    "name": "Drakeposting",
     "slots": 2,
-    "scene": "Two stacked panels of Drake. Top: recoiling with hand up — rejection. Bottom: smiling and pointing — approval.",
-    "when": "Comparing two options where one is rejected and one is preferred. Slot 0 (top) = rejected option, slot 1 (bottom) = chosen option.",
+    "scene": "Two stacked panels of Drake. Top: recoiling, hand up — rejection. Bottom: smiling and pointing — approval.",
+    "when": "Comparing two options where one is rejected and one is preferred. Slot 0 (top) = rejected, slot 1 (bottom) = chosen.",
     "example": {
       "user_said": "I read the docs once then immediately started guessing.",
       "captions": ["RTFM", "vibes-based coding"]
@@ -25,11 +25,11 @@
     "id": "fine",
     "name": "This Is Fine",
     "slots": 2,
-    "scene": "A cartoon dog sitting in a burning room sipping coffee. Slot 0 (top) sets up the disaster, slot 1 (bottom) is usually 'this is fine' or a variant of the user's denial.",
-    "when": "User describes an obvious disaster but talks about it like it's normal. The contrast IS the joke.",
+    "scene": "A cartoon dog sitting in a burning room sipping coffee. Slot 0 (top) sets up the disaster, slot 1 (bottom) is usually 'this is fine' or a variant of denial.",
+    "when": "User describes a disaster but acts like it's normal. The contrast IS the joke.",
     "example": {
       "user_said": "Prod crashes every hour but nobody is paged so we're good.",
-      "captions": ["prod down hourly, no alerts", "this is fine"]
+      "captions": ["prod down hourly", "this is fine"]
     }
   },
   {
@@ -48,7 +48,7 @@
     "name": "Afraid to Ask Andy",
     "slots": 2,
     "scene": "Andy from Parks & Rec, hands on cheeks, nervous. Slot 0 = an awkward admission of long-running ignorance, slot 1 = the absurd lengths to avoid asking.",
-    "when": "User pretends to know a term/concept they have actually been faking for ages. Self-deprecating energy.",
+    "when": "User pretends to know a term/concept they have actually been faking for ages.",
     "example": {
       "user_said": "I've used Kubernetes for years, totally know what a sidecar is.",
       "captions": ["used k8s for 3 years", "still no idea what a sidecar is"]
@@ -58,7 +58,7 @@
     "id": "success",
     "name": "Success Kid",
     "slots": 2,
-    "scene": "A baby with a clenched fist of victory in front of a beach. Tiny, petty wins celebrated like championships.",
+    "scene": "A baby with a clenched fist of victory. Tiny, petty wins celebrated like championships.",
     "when": "User celebrates a trivial accomplishment with disproportionate enthusiasm. Slot 0 = setup, slot 1 = the petty victory.",
     "example": {
       "user_said": "I remembered to put pants on before joining standup today.",
@@ -69,7 +69,7 @@
     "id": "iw",
     "name": "Insanity Wolf",
     "slots": 2,
-    "scene": "Black-and-white snarling wolf in front of moon. Slot 0 = a normal-ish setup line, slot 1 = an unhinged escalation.",
+    "scene": "Snarling black-and-white wolf. Slot 0 = a normal-ish setup, slot 1 = an unhinged escalation.",
     "when": "Take something the user said is mildly off and escalate it to a deranged extreme.",
     "example": {
       "user_said": "I sometimes skip the unit tests when I'm in a hurry.",
@@ -79,34 +79,309 @@
   {
     "id": "ds",
     "name": "Daily Struggle / Two Buttons",
-    "slots": 2,
-    "scene": "A sweating man in a red shirt stares at two red buttons, panicking. Each caption labels one button — usually two options that are basically the same or both bad.",
-    "when": "User agonizes over a false choice between two options that do not actually differ.",
+    "slots": 3,
+    "scene": "Sweating man in a red shirt panicking between two red buttons. Slot 0 = button 1 label, slot 1 = button 2 label, slot 2 = the character (often the user identity or 'me' / 'devs').",
+    "when": "User agonizes over a false choice between two options that are basically the same.",
     "example": {
-      "user_said": "Should I quit or just keep complaining on Twitter forever?",
-      "captions": ["fix the job", "tweet about it"]
+      "user_said": "Should I quit or keep complaining on Twitter forever?",
+      "captions": ["fix the job", "tweet about it", "me"]
     }
   },
   {
     "id": "ackbar",
-    "name": "It's a Trap",
-    "slots": 1,
-    "scene": "Admiral Ackbar mid-yell. Single caption: a restatement of an obvious trap as a warning.",
-    "when": "User describes a transparent trap with zero awareness. Restate the trap so it sounds like the warning the user should have heard.",
+    "name": "It's A Trap!",
+    "slots": 2,
+    "scene": "Admiral Ackbar mid-yell. Slot 0 = setup (the bait), slot 1 = the trap warning.",
+    "when": "User describes a transparent trap with zero awareness.",
     "example": {
-      "user_said": "My boss said it'd be a quick 30-minute call to discuss feedback.",
-      "captions": ["quick 30-min call about your performance"]
+      "user_said": "My boss said it'd be a quick 30-min call to discuss feedback.",
+      "captions": ["quick 30-min feedback call", "it's a performance review"]
     }
   },
   {
     "id": "philosoraptor",
     "name": "Philosoraptor",
     "slots": 2,
-    "scene": "A velociraptor in The Thinker pose. Two-panel fake-deep question. Slot 0 = pseudo-philosophical setup, slot 1 = ironic punchline that reveals the question is silly.",
+    "scene": "A velociraptor in The Thinker pose. Slot 0 = pseudo-philosophical setup, slot 1 = ironic punchline.",
     "when": "User asks a fake-deep or oddly profound-sounding question about something mundane.",
     "example": {
       "user_said": "If I name my variable better, does that make me a better person?",
       "captions": ["if I name the variable better", "do I become a better person"]
+    }
+  },
+  {
+    "id": "yodawg",
+    "name": "Xzibit Yo Dawg",
+    "slots": 2,
+    "scene": "Xzibit smiling and gesturing. The classic recursion meme: 'Yo dawg, I heard you like X so I put X in your X so you can X while you X.' Slot 0 = first half (heard you like…), slot 1 = the recursion punchline.",
+    "when": "Anything recursive, meta, or self-containing — model inside a model, framework wrapping a framework, AI roasting AI, function calling itself.",
+    "example": {
+      "user_said": "I've got an LLM evaluating outputs from another LLM.",
+      "captions": ["yo dawg, heard you like LLMs", "so I put an LLM in your LLM"]
+    }
+  },
+  {
+    "id": "gb",
+    "name": "Galaxy Brain",
+    "slots": 4,
+    "scene": "Four-panel escalation of a glowing brain getting more cosmic. Each slot = one rung on the increasingly-absurd ladder of supposed 'enlightenment'. Slot 0 = pedestrian, slot 3 = ascended/insane.",
+    "when": "User climbs a ladder of bad reasoning where each step thinks it's smarter than the last. Perfect for galaxy-brained takes, recursive stacks of abstraction, or AI-on-AI-on-AI structures.",
+    "example": {
+      "user_said": "First we trained the model. Then we used it to label data. Then we trained another model on that. Then we let them critique each other.",
+      "captions": ["train model", "model labels data", "model trains model", "models judge each other"]
+    }
+  },
+  {
+    "id": "midwit",
+    "name": "Midwit",
+    "slots": 3,
+    "scene": "Bell curve with three faces: a drooling brainlet on the left, an overthinking midwit in the middle, and a serene Jedi on the right. Both ends say the same simple thing; only the midwit overcomplicates. Slot 0 = brainlet take (left), slot 1 = midwit overcomplication (center), slot 2 = enlightened simple take (right).",
+    "when": "User overcomplicates something the experienced and the naive both get right by instinct.",
+    "example": {
+      "user_said": "Just use sqlite. We added Kafka, two brokers, and an event store first.",
+      "captions": ["just use sqlite", "we need Kafka, brokers, an event store…", "just use sqlite"]
+    }
+  },
+  {
+    "id": "spiderman",
+    "name": "Spider-Man Pointing at Spider-Man",
+    "slots": 2,
+    "scene": "Two Spider-Men pointing at each other. Slot 0 = label on Spider-Man A, slot 1 = label on Spider-Man B. Use when two things are accusing each other of being the thing.",
+    "when": "Two duplicates accusing each other, indistinguishable rivals, or 'we're literally the same'.",
+    "example": {
+      "user_said": "They added a wrapper called \"orchestrator\" that does what the existing scheduler already did.",
+      "captions": ["the scheduler", "the new orchestrator"]
+    }
+  },
+  {
+    "id": "gru",
+    "name": "Gru's Plan",
+    "slots": 4,
+    "scene": "Four panels of Gru presenting a flip-chart plan. First three panels: he reads the plan with confidence. Fourth panel: he double-takes at a flaw he just noticed. Slot 0-2 = three plan steps, slot 3 = same as slot 2 but now with the realization.",
+    "when": "A plan that fully ignores its own obvious flaw on the last step.",
+    "example": {
+      "user_said": "We'll launch the model in beta, ship to all users, and the issues will surface in production.",
+      "captions": ["ship the model in beta", "ship to all users", "issues surface in prod", "issues surface in prod"]
+    }
+  },
+  {
+    "id": "right",
+    "name": "Anakin and Padme",
+    "slots": 5,
+    "scene": "4-panel comic. Panel 1: Anakin says something earnestly. Panel 2: Padme smiles, '...for the better, right?' Panel 3: Anakin stares silently. Panel 4: Padme, now worried, '...right?' Slot 0 = Anakin's statement, slot 1 = Padme's hopeful affirmation, slot 2 = Anakin's silent reaction, slot 3 = Padme's worried follow-up. (Slot 4 sometimes empty / second-line filler.)",
+    "when": "Innocent-sounding statement that turns dread-inducing as the user keeps not addressing the obvious problem.",
+    "example": {
+      "user_said": "I'm shipping the auth refactor today. We'll write the tests later.",
+      "captions": ["shipping auth refactor today", "...with tests, right?", "", "...right?", ""]
+    }
+  },
+  {
+    "id": "harold",
+    "name": "Hide the Pain Harold",
+    "slots": 2,
+    "scene": "An older man with a clearly-forced smile, eyes betraying suffering. Slot 0 = setup of the painful situation, slot 1 = the forced reaction.",
+    "when": "User describes a quietly miserable situation with affected positivity.",
+    "example": {
+      "user_said": "Six hour cross-team meeting and I'm running it.",
+      "captions": ["6-hour cross-team meeting I'm running", "looking forward to it"]
+    }
+  },
+  {
+    "id": "disastergirl",
+    "name": "Disaster Girl",
+    "slots": 2,
+    "scene": "A young girl smirking at the camera while a house burns behind her.",
+    "when": "User caused a problem and is suspiciously calm about it.",
+    "example": {
+      "user_said": "I might have force-pushed to main but the build is still green.",
+      "captions": ["force-pushed to main", "the build is still green"]
+    }
+  },
+  {
+    "id": "fry",
+    "name": "Futurama Fry",
+    "slots": 2,
+    "scene": "Fry from Futurama squinting suspiciously. Classic format: 'Not sure if X or just Y.'",
+    "when": "User can't tell if a phenomenon is real or just their imagination/bias.",
+    "example": {
+      "user_said": "Is the model actually better or am I just used to its quirks?",
+      "captions": ["not sure if model is better", "or just used to its quirks"]
+    }
+  },
+  {
+    "id": "wonka",
+    "name": "Condescending Wonka",
+    "slots": 2,
+    "scene": "Gene Wilder as Willy Wonka leaning on a hand, smiling sarcastically.",
+    "when": "User says something self-important; throw it back at them mockingly.",
+    "example": {
+      "user_said": "We're disrupting the AI space with a new agent framework.",
+      "captions": ["another agent framework?", "do tell me how it disrupts AI"]
+    }
+  },
+  {
+    "id": "kermit",
+    "name": "But That's None of My Business",
+    "slots": 2,
+    "scene": "Kermit the Frog sipping tea, side-eye glance.",
+    "when": "User passive-aggressively comments on someone else's mess. The roast: turn that judgment back on them.",
+    "example": {
+      "user_said": "Other team's PRs are always so messy.",
+      "captions": ["mocks other team's messy PRs", "force-pushes to main"]
+    }
+  },
+  {
+    "id": "cmm",
+    "name": "Change My Mind",
+    "slots": 1,
+    "scene": "Steven Crowder sitting at a folding table on a campus with a sign reading whatever caption you supply. Single slot = the bold/contrarian claim.",
+    "when": "User makes a confident hot take.",
+    "example": {
+      "user_said": "TypeScript is just runtime errors with extra steps.",
+      "captions": ["TypeScript is runtime errors with extra steps"]
+    }
+  },
+  {
+    "id": "stonks",
+    "name": "Stonks",
+    "slots": 2,
+    "scene": "Wojak in a suit gesturing at a chart going UP, with the word 'STONKS' floating beside him.",
+    "when": "Number going up despite the underlying logic being broken.",
+    "example": {
+      "user_said": "Latency tripled but somehow conversion's higher.",
+      "captions": ["latency 3x", "stonks"]
+    }
+  },
+  {
+    "id": "rollsafe",
+    "name": "Roll Safe",
+    "slots": 2,
+    "scene": "Man tapping his temple knowingly, as if to say 'big brain time'. Slot 0 = setup, slot 1 = the galaxy-brained false-logic conclusion.",
+    "when": "User has bad logic that sounds smart on the surface.",
+    "example": {
+      "user_said": "Can't have a flaky test if you delete the test.",
+      "captions": ["can't have a flaky test", "if you delete the test"]
+    }
+  },
+  {
+    "id": "doge",
+    "name": "Doge",
+    "slots": 2,
+    "scene": "Shiba Inu staring sideways. Multicolor text in Comic Sans typically reads 'much X', 'very Y', 'wow', 'such Z'.",
+    "when": "Mock awe at something underwhelming. Caption like 'much X. very Y'.",
+    "example": {
+      "user_said": "We added another wrapper around the wrapper.",
+      "captions": ["much abstraction", "very wrapper. wow"]
+    }
+  },
+  {
+    "id": "blb",
+    "name": "Bad Luck Brian",
+    "slots": 2,
+    "scene": "School photo of an awkwardly-smiling kid in a sweater vest, braces, freckles. Two-line bad-fortune setup-then-payoff.",
+    "when": "User did something well-intentioned and it backfired in a humiliating way.",
+    "example": {
+      "user_said": "I refactored the function and somehow broke production.",
+      "captions": ["finally refactors the function", "ships the bug to prod"]
+    }
+  },
+  {
+    "id": "fwp",
+    "name": "First World Problems",
+    "slots": 2,
+    "scene": "Crying woman, mascara running. Caption: a setup of an extremely minor inconvenience.",
+    "when": "User is dramatically upset about a comically minor inconvenience.",
+    "example": {
+      "user_said": "My laptop took 4 seconds to wake from sleep this morning.",
+      "captions": ["laptop took 4 seconds to wake", "the suffering is unbearable"]
+    }
+  },
+  {
+    "id": "facepalm",
+    "name": "Facepalm",
+    "slots": 2,
+    "scene": "Captain Picard from Star Trek with his palm covering his face in disappointment.",
+    "when": "User describes something obvious-in-hindsight that anyone could have prevented.",
+    "example": {
+      "user_said": "We deleted the only backup before testing the restore.",
+      "captions": ["deleted the only backup", "before testing restore"]
+    }
+  },
+  {
+    "id": "mordor",
+    "name": "One Does Not Simply Walk Into Mordor",
+    "slots": 2,
+    "scene": "Boromir from Fellowship gesturing solemnly. Slot 0 typically begins 'One does not simply', slot 1 = the supposedly easy thing the user thinks they can just do.",
+    "when": "User describes a major undertaking like it's trivial.",
+    "example": {
+      "user_said": "We'll just migrate the whole monolith to microservices over the weekend.",
+      "captions": ["one does not simply", "migrate a monolith over the weekend"]
+    }
+  },
+  {
+    "id": "spongebob",
+    "name": "Mocking Spongebob",
+    "slots": 2,
+    "scene": "Spongebob in a chicken pose. Caption written in mocking AlTeRnAtInG cAsE — type the second slot exactly that way to get the full effect.",
+    "when": "User said something pompous or naive; caricature it back at them.",
+    "example": {
+      "user_said": "I think AGI will be solved by next quarter.",
+      "captions": ["I think we'll have AGI by next quarter", "i ThInK wE'lL hAvE aGi By NeXt QuArTeR"]
+    }
+  },
+  {
+    "id": "kombucha",
+    "name": "Kombucha Girl",
+    "slots": 2,
+    "scene": "Two side-by-side reactions: left = enthusiastic interest, right = repulsed disgust. Same person, opposite faces.",
+    "when": "User is oscillating between excitement and revulsion at the same idea.",
+    "example": {
+      "user_said": "I want to use Rust for everything but oh god the borrow checker.",
+      "captions": ["want to use Rust for everything", "remembers the borrow checker"]
+    }
+  },
+  {
+    "id": "keanu",
+    "name": "Conspiracy Keanu",
+    "slots": 2,
+    "scene": "Keanu Reeves with a bewildered, what-if expression. Two-line setup ('What if…') then a conspiracy-flavored payoff.",
+    "when": "User wades into 'what if it's all connected' territory.",
+    "example": {
+      "user_said": "What if all the bug reports are actually feature requests?",
+      "captions": ["what if all the bugs", "are just secret features"]
+    }
+  },
+  {
+    "id": "dwight",
+    "name": "Schrute Facts",
+    "slots": 2,
+    "scene": "Dwight Schrute from The Office, deadpan. Used for confidently-wrong corrections.",
+    "when": "User confidently asserts something incorrect or pedantic.",
+    "example": {
+      "user_said": "Actually, Postgres is just MySQL with extra steps.",
+      "captions": ["false. Postgres is just MySQL", "with more steps"]
+    }
+  },
+  {
+    "id": "cheems",
+    "name": "Cheems",
+    "slots": 2,
+    "scene": "Two-panel comparison: a buff dog labeled with confident past behavior and a weak dog (Cheems) labeled with the user's diminished present. Slot 0 = past strength, slot 1 = current weakness.",
+    "when": "User has lost their edge / contrast between past confidence and present capability.",
+    "example": {
+      "user_said": "In college I'd code 16 hours a day. Now I yawn at 9pm.",
+      "captions": ["college: 16-hour coding sprint", "now: bed at 9pm"]
+    }
+  },
+  {
+    "id": "both",
+    "name": "Why Not Both?",
+    "slots": 2,
+    "scene": "A young girl gesturing happily, suggesting both options. Slot 0 = first option, slot 1 = second option, with the caption set up so 'why not both' is implied.",
+    "when": "User is presenting a binary choice that doesn't have to be one.",
+    "example": {
+      "user_said": "Do I rewrite it in Go or Rust?",
+      "captions": ["rewrite in Go", "rewrite in Rust"]
     }
   }
 ]
