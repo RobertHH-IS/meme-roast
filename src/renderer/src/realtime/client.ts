@@ -3,7 +3,7 @@ import {
   CATALOG,
   GENERATE_MEME_TOOL,
   HEARTBEAT_INSTRUCTIONS,
-  TOOLS,
+  buildTools,
   buildSystemPrompt,
   type ScanBoundary
 } from './prompt'
@@ -71,6 +71,7 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
   let awaitingResponseCreate = false
   let targetSegment = 1
   let lastMemeSummary: string | undefined
+  let activeAvoidTemplateIds = new Set<string>()
 
   function getScanBoundary(): ScanBoundary {
     return { segment: targetSegment, lastMemeSummary }
@@ -84,7 +85,7 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
         type: 'realtime',
         instructions: buildSystemPrompt([], getScanBoundary()),
         output_modalities: ['text'],
-        tools: TOOLS,
+        tools: buildTools(),
         tool_choice: 'required',
         audio: {
           input: {
@@ -180,6 +181,8 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
             const tpl = CATALOG.find((c) => c.id === parsed.template_id)
             if (!tpl) {
               log('unknown template_id: ' + parsed.template_id)
+            } else if (activeAvoidTemplateIds.has(parsed.template_id)) {
+              log('🚫 skipped repeated template: ' + parsed.template_id)
             } else {
               log(
                 '🎯 generate_meme: ' +
@@ -219,6 +222,7 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
         // Clean up any orphaned buffers tied to this response.
         const response = event.response as { id?: string; output?: Array<{ id?: string }> } | undefined
         if (response?.id) activeResponses.delete(response.id)
+        if (activeResponses.size === 0) activeAvoidTemplateIds = new Set()
         for (const item of response?.output ?? []) {
           if (item.id) {
             argBuffers.delete(item.id)
@@ -256,6 +260,7 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
         }
         awaitingResponseCreate = false
         activeResponses.clear()
+        activeAvoidTemplateIds = new Set()
         log('server error: ' + msg)
         callbacks.onStateChange('error', msg)
         break
@@ -321,11 +326,14 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
         return
       }
       log('🔎 scan (cooldowns: ' + (cooldownIds.length || 'none') + ')')
+      activeAvoidTemplateIds = new Set(cooldownIds)
+      const tools = buildTools(cooldownIds)
       sendEvent(dc, {
         type: 'session.update',
         session: {
           type: 'realtime',
-          instructions: buildSystemPrompt(cooldownIds, getScanBoundary())
+          instructions: buildSystemPrompt(cooldownIds, getScanBoundary()),
+          tools
         }
       })
       awaitingResponseCreate = true
@@ -335,7 +343,7 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
           conversation: 'none',
           output_modalities: ['text'],
           instructions: HEARTBEAT_INSTRUCTIONS,
-          tools: TOOLS,
+          tools,
           tool_choice: 'required'
         }
       })
@@ -350,11 +358,14 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
         return
       }
       log('⚡ force-meme firing')
+      activeAvoidTemplateIds = new Set(cooldownIds)
+      const tools = buildTools(cooldownIds)
       sendEvent(dc, {
         type: 'session.update',
         session: {
           type: 'realtime',
-          instructions: buildSystemPrompt(cooldownIds, getScanBoundary())
+          instructions: buildSystemPrompt(cooldownIds, getScanBoundary()),
+          tools
         }
       })
       awaitingResponseCreate = true
@@ -365,7 +376,7 @@ export async function startRealtime(callbacks: ClientCallbacks): Promise<Realtim
           output_modalities: ['text'],
           instructions:
             'Pick the funniest meme for the most recent thing the user said and call generate_meme. Do NOT call no_meme — you must produce an actual meme.',
-          tools: TOOLS,
+          tools,
           tool_choice: { type: 'function', name: 'generate_meme' }
         }
       })

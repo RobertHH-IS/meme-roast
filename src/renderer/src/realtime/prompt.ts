@@ -61,12 +61,38 @@ export const TOOLS = [GENERATE_MEME_TOOL, NO_MEME_TOOL]
 // Backward-compat alias used by tests / older imports.
 export const TOOL_DEFINITION = GENERATE_MEME_TOOL
 
+export function buildTools(hiddenTemplateIds: string[] = []): typeof TOOLS {
+  const hidden = new Set(hiddenTemplateIds)
+  const visibleTemplateIds = CATALOG.map((c) => c.id).filter((id) => !hidden.has(id))
+  const templateIds = visibleTemplateIds.length > 0 ? visibleTemplateIds : CATALOG.map((c) => c.id)
+  return [
+    {
+      ...GENERATE_MEME_TOOL,
+      parameters: {
+        ...GENERATE_MEME_TOOL.parameters,
+        properties: {
+          ...GENERATE_MEME_TOOL.parameters.properties,
+          template_id: {
+            ...GENERATE_MEME_TOOL.parameters.properties.template_id,
+            enum: templateIds
+          }
+        }
+      }
+    },
+    NO_MEME_TOOL
+  ]
+}
+
 export type ScanBoundary = {
   segment: number
   lastMemeSummary?: string
 }
 
 export function buildSystemPrompt(cooldownIds: string[], boundary?: ScanBoundary): string {
+  const hidden = new Set(cooldownIds)
+  const visibleCatalog = CATALOG.filter((c) => !hidden.has(c.id))
+  const catalogForPrompt = visibleCatalog.length > 0 ? visibleCatalog : CATALOG
+
   return [
     'You are a meme-generation backend (NOT a chat assistant) listening to a live conversation.',
     'You have exactly two allowed actions:',
@@ -145,14 +171,14 @@ export function buildSystemPrompt(cooldownIds: string[], boundary?: ScanBoundary
     '- Default to generate_meme. no_meme is only for silence, noise, or unintelligible audio.',
     '- One meme per response, maximum.',
     cooldownIds.length > 0
-      ? `- Do NOT pick these template_ids for this response (recently used or dismissed): ${cooldownIds.join(', ')}.`
+      ? '- Recently used or dismissed templates have been removed from the available catalog for this response. Pick from the catalog below.'
       : '',
     '',
     'Each catalog entry below contains: id, name, slots (number of captions to provide), scene (what the meme looks like), when (when to use it), and example (a real user_said → captions mapping). Match the user\'s words to the closest WHEN, then write captions in the same shape as the EXAMPLE.',
     '',
     'CATALOG:',
     '```json',
-    JSON.stringify(CATALOG, null, 2),
+    JSON.stringify(catalogForPrompt, null, 2),
     '```'
   ]
     .filter(Boolean)

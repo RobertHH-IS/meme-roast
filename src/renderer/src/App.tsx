@@ -7,12 +7,14 @@ import { useStore } from './store'
 
 const COOLDOWN_AFTER_MEME_MS = 9_000
 const COOLDOWN_AFTER_SCAN_MS = 1_200
+const RECENT_TEMPLATE_AVOID_COUNT = 6
 
 function getAvoidTemplateIds(): string[] {
   const { memes, cooldownTemplates } = useStore.getState()
   const ids = new Set(cooldownTemplates)
-  const latestTemplateId = memes[0]?.templateId
-  if (latestTemplateId) ids.add(latestTemplateId)
+  for (const meme of memes.slice(0, RECENT_TEMPLATE_AVOID_COUNT)) {
+    ids.add(meme.templateId)
+  }
   return [...ids]
 }
 
