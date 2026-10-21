@@ -1,5 +1,8 @@
 {
   "name": "meme-roast",
+  "engines": {
+    "node": "^22.23.4 || ^24.22.1 || ^26.12.1"
+  },
   "version": "0.1.0",
   "description": "Voice-driven roast meme overlay. Listens via OpenAI Realtime, fires memes from memegen.link.",
   "private": true,
